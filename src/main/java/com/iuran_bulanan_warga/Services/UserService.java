@@ -6,7 +6,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,19 +31,31 @@ public class UserService {
     PasswordEncoder passwordEncoder;
 
     // Method for getting All users
-    public ResponseEntity<List<Users>> serviceGetAll() {
-        List<Users> users = userRepository.findAll();
-        return ResponseEntity.ok().body(users);
+    public ResponseEntity<?> serviceGetAll() {
+        try {
+            List<Users> users = userRepository.findAll();
+            if (users.isEmpty()) {
+                throw new NoSuchElementException("No users found");
+            }
+            return ResponseEntity.ok().body(users);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        }
     }
 
     // Method for getting user by id
-    public ResponseEntity<Users> serviceGetById(Integer id) {
-        Optional<Users> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            return ResponseEntity.ok().body(user.get());
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> serviceGetById(Integer id) {
+        try {
+            Optional<Users> user = userRepository.findById(id);
+            if (user.isPresent()) {
+                return ResponseEntity.ok().body(user.get());
+            } else {
+                throw new NoSuchElementException("No users found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         }
+
     }
 
     // Method for creating user
