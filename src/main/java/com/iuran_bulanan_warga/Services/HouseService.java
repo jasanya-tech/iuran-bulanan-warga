@@ -19,6 +19,9 @@ public class HouseService {
   @Autowired
   HouseRepository houseRepository;
 
+  @Autowired
+  CityRepository cityRepository;
+  
   public ResponseEntity<?> serviceGetAll() {
     try {
       List<Houses> houses = houseRepository.findAll();
@@ -26,8 +29,7 @@ public class HouseService {
         throw new NoSuchElementException("No house found!");
       }
       return ResponseEntity.ok().body(houses);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }
@@ -37,12 +39,10 @@ public class HouseService {
       Optional<Houses> house = houseRepository.findById(id);
       if (house.isPresent()) {
         return ResponseEntity.ok().body(house.get());
-      }
-      else {
+      } else {
         throw new NoSuchElementException("No house found!");
       }
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }
@@ -50,12 +50,10 @@ public class HouseService {
   public ResponseEntity<?> serviceCreate(HouseRequest houseRequest) {
     try {
       Houses house = new Houses(
-        houseRequest.getAddress()
-      );
+          houseRequest.getAddress());
       houseRepository.save(house);
       return ResponseEntity.ok().body(house);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }
@@ -70,8 +68,7 @@ public class HouseService {
       house.setAddress(houseRequest.getAddress());
       houseRepository.save(house);
       return ResponseEntity.ok().body(house);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }
@@ -84,8 +81,7 @@ public class HouseService {
       }
       houseRepository.deleteById(id);
       return ResponseEntity.ok().body(new MessageResponse("House " + id + " has been deleted"));
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }
@@ -94,8 +90,7 @@ public class HouseService {
     try {
       houseRepository.deleteAll();
       return ResponseEntity.ok().body(new MessageResponse("All houses has been deleted"));
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }

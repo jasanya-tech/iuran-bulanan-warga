@@ -42,7 +42,7 @@ public class UserController {
 
     @Operation(summary = "Create User", description = "Endpoint for Createing user")
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<?> create(@Valid @RequestBody UserRequest userRequest) {
         return userService.serviceCreate(userRequest);
     }
 
@@ -50,7 +50,6 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@Valid @RequestBody UserRequest userRequest,
             @PathVariable(value = "id", required = true) Integer id) {
-        System.out.println(id);
         return userService.serviceUpdate(id, userRequest);
     }
 
