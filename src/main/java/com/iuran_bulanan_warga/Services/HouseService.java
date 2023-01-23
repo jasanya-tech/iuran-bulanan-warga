@@ -54,7 +54,7 @@ public class HouseService {
     }
   }
 
-  public ResponseEntity<?> serviceCreate(String cities) {
+  public ResponseEntity<?> serviceCreate() {
     try {
       Houses house = new Houses(
         houseRequest.getAddress()
@@ -66,5 +66,44 @@ public class HouseService {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }
-  
+
+  public ResponseEntity<?> serviceUpdate(Integer id, HouseRequest houseRequest) {
+    try {
+      Optional<Houses> houses = houseRepository.findById(id);
+      if (!houses.isPresent()) {
+        throw new NoSuchElementException("House" + id + "doesn't exist!");
+      }
+      Houses house = houses.get();
+      house.setAddress(houseRequest.getAddress());
+      houseRepository.save(house);
+      return ResponseEntity.ok().body(house);
+    }
+    catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+  }
+
+  public ResponseEntity<?> serviceDeleteById(Integer id) {
+    try {
+      Optional<Houses> house = houseRepository.findById(id);
+      if (!house.isPresent()) {
+        throw new NoSuchElementException("House " + id + " doesn't exist!");
+      }
+      houseRepository.deleteById(id);
+      return ResponseEntity.ok().body(new MessageResponse("House " + id + " has been deleted"));
+    }
+    catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+  }
+
+  public ResponseEntity<?> serviceDeleteAll() {
+    try {
+      houseRepository.deleteAll();
+      return ResponseEntity.ok().body(new MessageResponse("All houses has been deleted"));
+    }
+    catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+  }
 }
