@@ -51,7 +51,8 @@ public class HouseService {
   public ResponseEntity<?> serviceCreate(HouseRequest houseRequest) {
     try {
       Houses house = new Houses(
-          houseRequest.getAddress());
+          houseRequest.getAddress()
+        );
       houseRepository.save(house);
       return ResponseEntity.ok().body(house);
     } catch (Exception e) {
