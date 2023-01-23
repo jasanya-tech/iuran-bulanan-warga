@@ -7,7 +7,6 @@ import java.util.Optional;
 import com.iuran_bulanan_warga.Helpers.DTO.Requests.HouseRequest;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.MessageResponse;
 import com.iuran_bulanan_warga.Models.Entities.Houses;
-import com.iuran_bulanan_warga.Models.Repositories.CityRepository;
 import com.iuran_bulanan_warga.Models.Repositories.HouseRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +18,6 @@ import org.springframework.stereotype.Service;
 public class HouseService {
   @Autowired
   HouseRepository houseRepository;
-
-  @Autowired
-  HouseRequest houseRequest;
-
-  @Autowired
-  CityRepository cityRepository;
 
   public ResponseEntity<?> serviceGetAll() {
     try {
@@ -54,7 +47,7 @@ public class HouseService {
     }
   }
 
-  public ResponseEntity<?> serviceCreate() {
+  public ResponseEntity<?> serviceCreate(HouseRequest houseRequest) {
     try {
       Houses house = new Houses(
         houseRequest.getAddress()

@@ -20,9 +20,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("api/houses")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name = "Users", description = "CRUD")
+@Tag(name = "Houses", description = "CRUD")
 
 public class HouseController {
   @Autowired
@@ -43,7 +43,7 @@ public class HouseController {
   @Operation(summary = "Create House", description = "Endpoint for creating user")
   @PostMapping
   public ResponseEntity<?> create(@RequestBody HouseRequest houseRequest) {
-    return houseService.serviceCreate();
+    return houseService.serviceCreate(houseRequest);
   }
 
   @Operation(summary = "Update House", description = "Enspoint for updating user")
