@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.iuran_bulanan_warga.Helpers.DTO.Requests.HouseRequest;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.MessageResponse;
 import com.iuran_bulanan_warga.Models.Entities.Houses;
+import com.iuran_bulanan_warga.Models.Repositories.CityRepository;
 import com.iuran_bulanan_warga.Models.Repositories.HouseRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class HouseService {
 
   @Autowired
   CityRepository cityRepository;
-  
+
   public ResponseEntity<?> serviceGetAll() {
     try {
       List<Houses> houses = houseRepository.findAll();

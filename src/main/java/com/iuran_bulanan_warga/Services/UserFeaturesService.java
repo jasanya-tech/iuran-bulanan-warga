@@ -1,8 +1,5 @@
 package com.iuran_bulanan_warga.Services;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,11 +21,9 @@ public class UserFeaturesService {
 
     public ResponseEntity<?> addOccupantsService(Integer userId, Integer houseId) {
         try {
-            Set<Users> users = new HashSet<>();
             Users user = userRepository.findById(userId).get();
             Houses house = HouseRepository.findById(houseId).get();
-            users.add(user);
-            house.setOccupants(users);
+            house.getOccupants().add(user);
             HouseRepository.save(house);
             return ResponseEntity.ok().body(house);
         } catch (Exception e) {
