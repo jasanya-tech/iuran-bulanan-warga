@@ -1,5 +1,9 @@
 package com.iuran_bulanan_warga.Models.Repositories;
 
-public class CityRepository {
-  
+import com.iuran_bulanan_warga.Models.Entities.Cities;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CityRepository extends JpaRepository<Cities, Integer> {
+
 }
