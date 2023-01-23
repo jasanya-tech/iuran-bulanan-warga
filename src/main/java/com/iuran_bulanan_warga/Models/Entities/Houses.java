@@ -42,6 +42,14 @@ public class Houses implements Serializable {
   // Column pemilik rumah
   private Users owner;
 
+  @ManyToOne
+  @JoinColumn(name = "province")
+  private Provinces province;
+
+  @ManyToOne
+  @JoinColumn(name = "city")
+  private Cities city;
+
   @ManyToMany
   @JoinTable(name = "house_users", joinColumns = @JoinColumn(name = "house_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
   // Column penghuni rumah
