@@ -4,9 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
-import com.iuran_bulanan_warga.Helpers.DTO.Responses.HouseResponse;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.MessageResponse;
 import com.iuran_bulanan_warga.Models.Entities.Houses;
 import com.iuran_bulanan_warga.Models.Entities.Users;
@@ -33,18 +30,4 @@ public class UserFeaturesService {
             return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         }
     }
-    public ResponseEntity<?> showHouseData(Integer houseId){
-      try {
-        Optional<Houses> house = houseRepository.findById(houseId);
-        HouseResponse houseResponse = new HouseResponse();
-        houseResponse.setAddress(house.get().getAddress());
-        houseResponse.setOwnerName(house.get().getOwner().getFullName());
-        houseResponse.setCityName(house.get().getCity().getCityName());
-        houseResponse.setProvinceName(house.get().getProvince().getProvinceName());
-        return ResponseEntity.ok().body(houseResponse);
-      } catch (Exception e) {
-        return ResponseEntity.ok().body(new MessageResponse(e.getMessage()));
-      }
-    }
-
 }
