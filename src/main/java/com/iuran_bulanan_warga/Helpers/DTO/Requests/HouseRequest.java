@@ -13,6 +13,4 @@ public class HouseRequest {
   private Integer owner;
 
   private Integer city;
-
-  private Integer province;
 }

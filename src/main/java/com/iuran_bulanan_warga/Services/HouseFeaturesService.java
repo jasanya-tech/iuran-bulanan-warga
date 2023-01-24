@@ -23,7 +23,7 @@ public class HouseFeaturesService {
       houseResponse.setAddress(house.get().getAddress());
       houseResponse.setOwnerName(house.get().getOwner().getFullName());
       houseResponse.setCityName(house.get().getCity().getCityName());
-      houseResponse.setProvinceName(house.get().getProvince().getProvinceName());
+      houseResponse.setProvinceName(house.get().getCity().getProvince().getProvinceName());
       return ResponseEntity.ok().body(houseResponse);
     } catch (Exception e) {
       return ResponseEntity.ok().body(new MessageResponse(e.getMessage()));

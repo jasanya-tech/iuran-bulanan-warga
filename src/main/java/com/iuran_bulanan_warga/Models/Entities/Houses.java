@@ -41,10 +41,6 @@ public class Houses implements Serializable {
   private Users owner;
 
   @ManyToOne
-  @JoinColumn(name = "province")
-  private Provinces province;
-
-  @ManyToOne
   @JoinColumn(name = "city")
   private Cities city;
 
@@ -53,10 +49,9 @@ public class Houses implements Serializable {
   // Column penghuni rumah
   private Set<Users> occupants = new HashSet<>();
 
-  public Houses(String address, Users owner, Provinces province, Cities city) {
+  public Houses(String address, Users owner, Cities city) {
     this.address = address;
     this.owner = owner;
-    this.province = province;
     this.city = city;
   }
 }
