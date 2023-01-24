@@ -62,9 +62,6 @@ public class HouseService {
     try {
       Optional<Users> owner = userRepository.findById(houseRequest.getOwner());
       Optional<Cities> city = cityRepository.findById(houseRequest.getCity());
-      // if(!owner.isPresent()){
-      //   throw new NoSuchElementException("No users found");
-      // }
       Houses house = new Houses(
           houseRequest.getAddress(),
           owner.get(),
@@ -79,13 +76,17 @@ public class HouseService {
 
   public ResponseEntity<?> serviceUpdate(Integer id, HouseRequest houseRequest) {
     try {
-      Optional<Houses> houses = houseRepository.findById(id);
-      if (!houses.isPresent()) {
+      Optional<Houses> house = houseRepository.findById(id);
+      Optional<Users> owner = userRepository.findById(houseRequest.getOwner());
+      Optional<Cities> city = cityRepository.findById(houseRequest.getCity());
+      if (!house.isPresent()) {
         throw new NoSuchElementException("House" + id + "doesn't exist!");
       }
-      Houses house = houses.get();
-      house.setAddress(houseRequest.getAddress());
-      houseRepository.save(house);
+      Houses houseData = house.get();
+      houseData.setAddress(houseRequest.getAddress());
+      houseData.setOwner(owner.get());
+      houseData.setCity(city.get());
+      houseRepository.save(houseData);
       return ResponseEntity.ok().body(house);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
