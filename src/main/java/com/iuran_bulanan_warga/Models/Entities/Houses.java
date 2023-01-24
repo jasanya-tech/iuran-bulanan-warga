@@ -14,7 +14,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-// import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,7 +32,6 @@ public class Houses implements Serializable {
   @Column(name = "id")
   private Integer id;
 
-  // @NotBlank
   @Size(max = 50)
   private String address;
 
@@ -55,7 +53,10 @@ public class Houses implements Serializable {
   // Column penghuni rumah
   private Set<Users> occupants = new HashSet<>();
 
-  public Houses(String address) {
+  public Houses(String address, Users owner, Provinces province, Cities city) {
     this.address = address;
+    this.owner = owner;
+    this.province = province;
+    this.city = city;
   }
 }

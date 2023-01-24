@@ -6,9 +6,14 @@ import java.util.Optional;
 
 import com.iuran_bulanan_warga.Helpers.DTO.Requests.HouseRequest;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.MessageResponse;
+import com.iuran_bulanan_warga.Models.Entities.Cities;
 import com.iuran_bulanan_warga.Models.Entities.Houses;
+import com.iuran_bulanan_warga.Models.Entities.Provinces;
+import com.iuran_bulanan_warga.Models.Entities.Users;
 import com.iuran_bulanan_warga.Models.Repositories.CityRepository;
 import com.iuran_bulanan_warga.Models.Repositories.HouseRepository;
+import com.iuran_bulanan_warga.Models.Repositories.ProvinceRepository;
+import com.iuran_bulanan_warga.Models.Repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +26,13 @@ public class HouseService {
   HouseRepository houseRepository;
 
   @Autowired
+  ProvinceRepository provinceRepository;
+
+  @Autowired
   CityRepository cityRepository;
+
+  @Autowired
+  UserRepository userRepository;
 
   public ResponseEntity<?> serviceGetAll() {
     try {
@@ -50,8 +61,17 @@ public class HouseService {
 
   public ResponseEntity<?> serviceCreate(HouseRequest houseRequest) {
     try {
+      Optional<Users> owner = userRepository.findById(houseRequest.getOwner());
+      Optional<Provinces> province = provinceRepository.findById(houseRequest.getProvince());
+      Optional<Cities> city = cityRepository.findById(houseRequest.getCity());
+      // if(!owner.isPresent()){
+      //   throw new NoSuchElementException("No users found");
+      // }
       Houses house = new Houses(
-          houseRequest.getAddress()
+          houseRequest.getAddress(),
+          owner.get(),
+          province.get(),
+          city.get()
         );
       houseRepository.save(house);
       return ResponseEntity.ok().body(house);

@@ -1,7 +1,5 @@
 package com.iuran_bulanan_warga.Helpers.DTO.Requests;
 
-import java.util.Set;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -12,9 +10,9 @@ public class HouseRequest {
   @Size(max = 255)
   private String address;
 
-  private Set<String> owner;
+  private Integer owner;
 
-  private Set<String> city;
+  private Integer city;
 
-  private Set<String> province;
+  private Integer province;
 }
