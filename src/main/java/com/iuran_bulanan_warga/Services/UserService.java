@@ -34,6 +34,7 @@ public class UserService {
     public ResponseEntity<?> serviceGetAll() {
         try {
             List<Users> users = userRepository.findAll();
+            
             if (users.isEmpty()) {
                 throw new NoSuchElementException("No users found");
             }
