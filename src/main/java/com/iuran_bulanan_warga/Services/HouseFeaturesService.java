@@ -50,6 +50,7 @@ public class HouseFeaturesService {
 
       Map<String, Object> res = new HashMap<>();
       res.put("houses", houses);
+      res.put("size", size);
       res.put("currentPage", paging.getPageNumber());
       res.put("totalItems", pageHouses.getTotalElements());
       res.put("totalPage", pageHouses.getTotalPages());
