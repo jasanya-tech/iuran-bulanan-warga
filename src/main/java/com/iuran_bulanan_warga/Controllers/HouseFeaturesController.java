@@ -17,7 +17,7 @@ import jakarta.websocket.server.PathParam;
 @RestController
 @RequestMapping("api/houses/views")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name = "House Features", description = "Additional features for managing the UI of houses data")
+@Tag(name = "Houses Features", description = "Additional features for managing the UI of houses data")
 public class HouseFeaturesController {
   @Autowired
   HouseFeaturesService houseFeaturesService;
