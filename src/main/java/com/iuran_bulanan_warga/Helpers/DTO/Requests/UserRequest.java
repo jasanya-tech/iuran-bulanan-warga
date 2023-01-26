@@ -13,6 +13,9 @@ public class UserRequest {
     @Size(min = 3, max = 45)
     private String fullName;
 
+    @Size(max = 13)
+    private String phoneNumber;
+
     @NotBlank
     @Size(max = 128)
     @Email

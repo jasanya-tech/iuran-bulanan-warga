@@ -34,7 +34,7 @@ public class UserService {
     public ResponseEntity<?> serviceGetAll() {
         try {
             List<Users> users = userRepository.findAll();
-            
+
             if (users.isEmpty()) {
                 throw new NoSuchElementException("No users found");
             }
@@ -69,7 +69,8 @@ public class UserService {
             Users user = new Users(
                     userRequest.getFullName(),
                     userRequest.getEmail(),
-                    passwordEncoder.encode(userRequest.getPassword()));
+                    passwordEncoder.encode(userRequest.getPassword()),
+                    userRequest.getPhoneNumber());
             Set<String> reqRole = userRequest.getRole();
             Set<Role> roles = new HashSet<>();
             if (reqRole == null) {

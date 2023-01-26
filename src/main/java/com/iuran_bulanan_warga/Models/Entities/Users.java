@@ -26,6 +26,9 @@ public class Users implements Serializable {
     @Size(max = 45)
     private String fullName;
 
+    @Size(max = 13)
+    private String phoneNumber;
+
     @NotBlank
     @Email
     @Column(unique = true, length = 128)
@@ -39,8 +42,9 @@ public class Users implements Serializable {
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public Users(String fullName, String email, String password) {
+    public Users(String fullName, String phoneNumber, String email, String password) {
         this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
     }
