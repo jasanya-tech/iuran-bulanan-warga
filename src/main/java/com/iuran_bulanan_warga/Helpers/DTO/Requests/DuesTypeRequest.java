@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class DuesTypeRequest {
   private String duesName;
+  private String cost;
 }

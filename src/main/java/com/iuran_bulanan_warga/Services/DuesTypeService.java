@@ -46,8 +46,8 @@ public class DuesTypeService {
   public ResponseEntity<?> serviceCreate(DuesTypeRequest duesTypeRequest) {
     try {
       DuesType duesType = new DuesType(
-          duesTypeRequest.getDuesName()
-        );
+          duesTypeRequest.getDuesName(),
+          duesTypeRequest.getCost());
       duesTypeRepository.save(duesType);
       return ResponseEntity.ok().body(duesType);
     } catch (Exception e) {
@@ -63,6 +63,7 @@ public class DuesTypeService {
       }
       DuesType duesTypeData = duesType.get();
       duesTypeData.setDuesName(duesTypeRequest.getDuesName());
+      duesTypeData.setCost(duesTypeRequest.getCost());
       duesTypeRepository.save(duesTypeData);
       return ResponseEntity.ok().body(duesType);
     } catch (Exception e) {

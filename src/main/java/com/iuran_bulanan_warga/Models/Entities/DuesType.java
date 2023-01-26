@@ -26,7 +26,10 @@ public class DuesType {
   @Size(max = 30)
   private String duesName;
 
-  public DuesType(String duesName) {
+  private String cost;
+
+  public DuesType(String duesName, String cost) {
     this.duesName = duesName;
+    this.cost = cost;
   }
 }

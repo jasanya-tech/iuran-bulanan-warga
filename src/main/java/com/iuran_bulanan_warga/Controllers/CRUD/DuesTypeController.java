@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("api/duestype")
+@RequestMapping("api/duesTypes")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Tag(name = "Dues Type", description = "CRUD")
 
