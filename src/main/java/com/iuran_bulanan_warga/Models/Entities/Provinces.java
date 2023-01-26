@@ -1,5 +1,7 @@
 package com.iuran_bulanan_warga.Models.Entities;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,10 +20,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "provinces", uniqueConstraints = {
-  @UniqueConstraint(columnNames = "provinceName")
+    @UniqueConstraint(columnNames = "provinceName")
 })
 
-public class Provinces {
+public class Provinces implements Serializable {
+  private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")

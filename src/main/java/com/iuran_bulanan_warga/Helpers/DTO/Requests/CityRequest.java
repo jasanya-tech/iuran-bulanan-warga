@@ -6,5 +6,5 @@ import lombok.Data;
 public class CityRequest {
   private String cityName;
 
-  private Integer province;
+  private String province;
 }

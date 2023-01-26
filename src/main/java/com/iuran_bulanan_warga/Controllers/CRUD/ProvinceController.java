@@ -57,7 +57,7 @@ public class ProvinceController {
 
   @Operation(summary = "Delete One Province", description = "Endpoint for deleting one province")
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> delete(@PathVariable(value = "id", required = true) Integer id) {
+  public ResponseEntity<?> delete(@PathVariable(value = "id", required = true) String id) {
     return provinceService.serviceDeleteById(id);
   }
 

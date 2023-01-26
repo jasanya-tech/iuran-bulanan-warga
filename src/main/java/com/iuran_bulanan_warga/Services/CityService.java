@@ -50,11 +50,11 @@ public class CityService {
 
   public ResponseEntity<?> serviceCreate(CityRequest cityRequest) {
     try {
-      Optional<Provinces> province = provinceRepository.findById(cityRequest.getProvince());
+      Integer provinceId = Integer.parseInt(cityRequest.getProvince());
+      Optional<Provinces> province = provinceRepository.findById(provinceId);
       Cities city = new Cities(
-        cityRequest.getCityName(),
-        province.get()
-      );
+          cityRequest.getCityName(),
+          province.get());
       cityRepository.save(city);
       return ResponseEntity.ok().body(city);
     } catch (Exception e) {
@@ -64,8 +64,9 @@ public class CityService {
 
   public ResponseEntity<?> serviceUpdate(Integer id, CityRequest cityRequest) {
     try {
+      Integer provinceId = Integer.parseInt(cityRequest.getProvince());
       Optional<Cities> city = cityRepository.findById(id);
-      Optional<Provinces> province = provinceRepository.findById(cityRequest.getProvince());
+      Optional<Provinces> province = provinceRepository.findById(provinceId);
       if (!city.isPresent()) {
         throw new NoSuchElementException("City" + id + "doesn't exist!");
       }

@@ -31,7 +31,7 @@ public class ProvinceFeaturesService {
       provinces = pageProvinces.getContent();
 
       Map<String, Object> res = new HashMap<>();
-      res.put("provinces", provinces);
+      res.put("data", provinces);
       res.put("size", size);
       res.put("currentPage", paging.getPageNumber());
       res.put("totalItems", pageProvinces.getTotalElements());

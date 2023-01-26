@@ -46,8 +46,7 @@ public class ProvinceService {
   public ResponseEntity<?> serviceCreate(ProvinceRequest provinceRequest) {
     try {
       Provinces province = new Provinces(
-          provinceRequest.getProvinceName()
-        );
+          provinceRequest.getProvinceName());
       provinceRepository.save(province);
       return ResponseEntity.ok().body(province);
     } catch (Exception e) {
@@ -70,13 +69,14 @@ public class ProvinceService {
     }
   }
 
-  public ResponseEntity<?> serviceDeleteById(Integer id) {
+  public ResponseEntity<?> serviceDeleteById(String id) {
     try {
-      Optional<Provinces> province = provinceRepository.findById(id);
+      Integer convertId = Integer.valueOf(id);
+      Optional<Provinces> province = provinceRepository.findById(convertId);
       if (!province.isPresent()) {
         throw new NoSuchElementException("province " + id + " doesn't exist!");
       }
-      provinceRepository.deleteById(id);
+      provinceRepository.deleteById(convertId);
       return ResponseEntity.ok().body(new MessageResponse("province " + id + " has been deleted"));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));

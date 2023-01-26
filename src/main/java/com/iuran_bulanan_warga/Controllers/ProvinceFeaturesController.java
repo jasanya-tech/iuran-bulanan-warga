@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("api/province/views")
+@RequestMapping("api/provinces/views")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Tag(name = "Provinces Features", description = "Additional features for managing the UI of provinces data")
 public class ProvinceFeaturesController {
