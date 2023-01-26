@@ -65,8 +65,7 @@ public class HouseService {
       Houses house = new Houses(
           houseRequest.getAddress(),
           owner.get(),
-          city.get()
-        );
+          city.get());
       houseRepository.save(house);
       return ResponseEntity.ok().body(house);
     } catch (Exception e) {
@@ -110,6 +109,19 @@ public class HouseService {
     try {
       houseRepository.deleteAll();
       return ResponseEntity.ok().body(new MessageResponse("All houses has been deleted"));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+  }
+
+  // adding occupants to the house
+  public ResponseEntity<?> addOccupantsService(Integer userId, Integer houseId) {
+    try {
+      Users user = userRepository.findById(userId).get();
+      Houses house = houseRepository.findById(houseId).get();
+      house.getOccupants().add(user);
+      houseRepository.save(house);
+      return ResponseEntity.ok().body(house);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
