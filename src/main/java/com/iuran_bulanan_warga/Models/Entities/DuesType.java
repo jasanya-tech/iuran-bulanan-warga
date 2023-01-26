@@ -5,10 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -19,26 +15,18 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "cities", uniqueConstraints = {
-  @UniqueConstraint(columnNames = "cityName")
-})
 
-public class Cities {
+public class DuesType {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
+  @Column(name = "id", unique = true)
   private Integer id;
 
   @NotBlank
-  @Size(max = 50)
-  private String cityName;
+  @Size(max = 30)
+  private String duesName;
 
-  @ManyToOne
-  @JoinColumn(name = "province")
-  private Provinces province;
-
-  public Cities(String cityName, Provinces province) {
-    this.cityName = cityName;
-    this.province = province;
+  public DuesType(String duesName) {
+    this.duesName = duesName;
   }
 }
