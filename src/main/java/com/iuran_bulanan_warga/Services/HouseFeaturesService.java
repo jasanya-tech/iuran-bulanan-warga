@@ -9,7 +9,9 @@ import java.util.Optional;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.HouseResponse;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.MessageResponse;
 import com.iuran_bulanan_warga.Models.Entities.Houses;
+import com.iuran_bulanan_warga.Models.Entities.Users;
 import com.iuran_bulanan_warga.Models.Repositories.HouseRepository;
+import com.iuran_bulanan_warga.Models.Repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,9 +24,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class HouseFeaturesService {
   @Autowired
-    HouseRepository houseRepository;
-  
-  public ResponseEntity<?> showHouseData(Integer houseId){
+  HouseRepository houseRepository;
+
+  @Autowired
+  UserRepository userRepository;
+
+  public ResponseEntity<?> showHouseData(Integer houseId) {
     try {
       Optional<Houses> house = houseRepository.findById(houseId);
       HouseResponse houseResponse = new HouseResponse();
@@ -33,8 +38,7 @@ public class HouseFeaturesService {
       houseResponse.setCityName(house.get().getCity().getCityName());
       houseResponse.setProvinceName(house.get().getCity().getProvince().getProvinceName());
       return ResponseEntity.ok().body(houseResponse);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return ResponseEntity.ok().body(new MessageResponse(e.getMessage()));
     }
   }
@@ -55,8 +59,7 @@ public class HouseFeaturesService {
       res.put("totalItems", pageHouses.getTotalElements());
       res.put("totalPage", pageHouses.getTotalPages());
       return ResponseEntity.ok().body(res);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
