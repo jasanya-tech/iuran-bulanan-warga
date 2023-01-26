@@ -1,7 +1,7 @@
 package com.iuran_bulanan_warga.Controllers.CRUD;
 
-import com.iuran_bulanan_warga.Helpers.DTO.Requests.HouseRequest;
-import com.iuran_bulanan_warga.Services.HouseService;
+import com.iuran_bulanan_warga.Helpers.DTO.Requests.ProvinceRequest;
+import com.iuran_bulanan_warga.Services.ProvinceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,50 +20,50 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("api/houses")
+@RequestMapping("api/provinces")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name = "Houses", description = "CRUD")
+@Tag(name = "Provinces", description = "CRUD")
 
-public class HouseController {
+public class ProvinceController {
   @Autowired
-  HouseService houseService;
+  ProvinceService provinceService;
 
-  @Operation(summary = "Get All Houses", description = "Endpoint for getting all houses")
+  @Operation(summary = "Get All Provinces", description = "Endpoint for getting all provinces")
   @GetMapping
   public ResponseEntity<?> getAll() {
-    return houseService.serviceGetAll();
+    return provinceService.serviceGetAll();
   }
 
-  @Operation(summary = "Get One House", description = "Endpoint for getting one house")
+  @Operation(summary = "Get One Province", description = "Endpoint for getting one province")
   @GetMapping("/{id}")
   public ResponseEntity<?> getById(@PathVariable("id") Integer id) {
-    return houseService.serviceGetById(id);
+    return provinceService.serviceGetById(id);
   }
 
-  @Operation(summary = "Create House", description = "Endpoint for creating house")
+  @Operation(summary = "Create Province", description = "Endpoint for creating province")
   @PostMapping
-  public ResponseEntity<?> create(@Valid @RequestBody HouseRequest houseRequest) {
-    return houseService.serviceCreate(houseRequest);
+  public ResponseEntity<?> create(@Valid @RequestBody ProvinceRequest provinceRequest) {
+    return provinceService.serviceCreate(provinceRequest);
   }
 
-  @Operation(summary = "Update House", description = "Enspoint for updating house")
+  @Operation(summary = "Update Province", description = "Enspoint for updating province")
   @PutMapping("/{id}")
   public ResponseEntity<?> update(
-      @Valid @RequestBody HouseRequest houseRequest,
+      @Valid @RequestBody ProvinceRequest provinceRequest,
       @PathVariable(value = "id", required = true) Integer id) {
     System.out.println(id);
-    return houseService.serviceUpdate(id, houseRequest);
+    return provinceService.serviceUpdate(id, provinceRequest);
   }
 
-  @Operation(summary = "Delete One House", description = "Endpoint for deleting one house")
+  @Operation(summary = "Delete One Province", description = "Endpoint for deleting one province")
   @DeleteMapping("/{id}")
   public ResponseEntity<?> delete(@PathVariable(value = "id", required = true) Integer id) {
-    return houseService.serviceDeleteById(id);
+    return provinceService.serviceDeleteById(id);
   }
 
-  @Operation(summary = "Delete All Houses", description = "Endpoint for deleting all houses")
+  @Operation(summary = "Delete All Provinces", description = "Endpoint for deleting all provinces")
   @DeleteMapping
   public ResponseEntity<?> deleteAll() {
-    return houseService.serviceDeleteAll();
+    return provinceService.serviceDeleteAll();
   }
 }

@@ -30,4 +30,8 @@ public class Provinces {
   @NotBlank
   @Size(max = 30)
   private String provinceName;
+
+  public Provinces(String provinceName) {
+    this.provinceName = provinceName;
+  }
 }
