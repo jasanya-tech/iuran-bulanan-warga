@@ -9,7 +9,6 @@ import java.util.Optional;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.HouseResponse;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.MessageResponse;
 import com.iuran_bulanan_warga.Models.Entities.Houses;
-import com.iuran_bulanan_warga.Models.Entities.Users;
 import com.iuran_bulanan_warga.Models.Repositories.HouseRepository;
 import com.iuran_bulanan_warga.Models.Repositories.UserRepository;
 
