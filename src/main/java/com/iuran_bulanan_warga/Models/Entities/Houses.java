@@ -57,6 +57,10 @@ public class Houses implements Serializable {
   // Column penghuni rumah
   private Set<Users> occupants = new HashSet<>();
 
+  @ManyToMany
+  @JoinTable(name = "monthlyDues", joinColumns = @JoinColumn(name = "houseId"), inverseJoinColumns = @JoinColumn(name = "duesTypeId"))
+  private Set<DuesType> monthlyDues = new HashSet<>();
+
   public Houses(String houseName, String streat, Integer houseNumber, String rt, String rw, Users owner, Cities city) {
     this.houseName = houseName;
     this.streat = streat;
