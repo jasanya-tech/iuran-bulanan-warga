@@ -11,14 +11,14 @@ public class HouseRequest {
   private String houseName;
 
   @NotBlank
+  private String streat;
+
+  @NotBlank
   private String houseNumber;
 
   private String rt;
 
   private String rw;
-
-  @NotBlank
-  private String streat;
 
   // number of id owner
   private String owner;

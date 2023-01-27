@@ -34,6 +34,12 @@ public class CityController {
     return cityService.serviceGetAll();
   }
 
+  @Operation(summary = "Get All Cities By Province id", description = "Endpoint for getting all cities by province id")
+  @GetMapping("/province/{provinceId}")
+  public ResponseEntity<?> getAllByProvince(@PathVariable("provinceId") Integer provinceId) {
+    return cityService.serviceGetAllByProvince(provinceId);
+  }
+
   @Operation(summary = "Get One City", description = "Endpoint for getting one city")
   @GetMapping("/{id}")
   public ResponseEntity<?> getById(@PathVariable("id") Integer id) {

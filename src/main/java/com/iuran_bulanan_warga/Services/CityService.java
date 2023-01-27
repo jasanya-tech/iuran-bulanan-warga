@@ -1,5 +1,6 @@
 package com.iuran_bulanan_warga.Services;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -31,7 +32,19 @@ public class CityService {
       }
       return ResponseEntity.ok().body(cities);
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+      return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
+    }
+  }
+
+  public ResponseEntity<?> serviceGetAllByProvince(Integer provinceId) {
+    try {
+      Iterable<Cities> cities = cityRepository.findAllByProvinceId(provinceId);
+      if (cities instanceof Collection<?> && ((Collection<?>) cities).size() == 0) {
+        throw new NoSuchElementException("No city found!");
+      }
+      return ResponseEntity.ok().body(cities);
+    } catch (Exception e) {
+      return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
     }
   }
 
@@ -44,7 +57,7 @@ public class CityService {
         throw new NoSuchElementException("No city found!");
       }
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+      return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
     }
   }
 
@@ -58,7 +71,7 @@ public class CityService {
       cityRepository.save(city);
       return ResponseEntity.ok().body(city);
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+      return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
     }
   }
 
@@ -76,7 +89,7 @@ public class CityService {
       cityRepository.save(cityData);
       return ResponseEntity.ok().body(city);
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+      return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
     }
   }
 
@@ -89,7 +102,7 @@ public class CityService {
       cityRepository.deleteById(id);
       return ResponseEntity.ok().body(new MessageResponse("City " + id + " has been deleted"));
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+      return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
     }
   }
 
@@ -98,7 +111,7 @@ public class CityService {
       cityRepository.deleteAll();
       return ResponseEntity.ok().body(new MessageResponse("All cities has been deleted"));
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+      return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
     }
   }
 }
