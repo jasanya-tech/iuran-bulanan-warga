@@ -32,7 +32,7 @@ public class HouseFeaturesService {
     try {
       Optional<Houses> house = houseRepository.findById(houseId);
       HouseResponse houseResponse = new HouseResponse();
-      houseResponse.setAddress(house.get().getAddress());
+      houseResponse.setAddress(house.get().getStreat());
       houseResponse.setOwnerName(house.get().getOwner().getFullName());
       houseResponse.setCityName(house.get().getCity().getCityName());
       houseResponse.setProvinceName(house.get().getCity().getProvince().getProvinceName());

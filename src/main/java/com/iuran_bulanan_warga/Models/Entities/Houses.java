@@ -33,7 +33,15 @@ public class Houses implements Serializable {
   private Integer id;
 
   @Size(max = 50)
-  private String address;
+  private String houseName;
+
+  private String streat;
+
+  private Integer houseNumber;
+
+  private String rt;
+
+  private String rw;
 
   @ManyToOne
   @JoinColumn(name = "owner", referencedColumnName = "id")
@@ -49,8 +57,12 @@ public class Houses implements Serializable {
   // Column penghuni rumah
   private Set<Users> occupants = new HashSet<>();
 
-  public Houses(String address, Users owner, Cities city) {
-    this.address = address;
+  public Houses(String houseName, String streat, Integer houseNumber, String rt, String rw, Users owner, Cities city) {
+    this.houseName = houseName;
+    this.streat = streat;
+    this.houseNumber = houseNumber;
+    this.rt = rt;
+    this.rw = rw;
     this.owner = owner;
     this.city = city;
   }

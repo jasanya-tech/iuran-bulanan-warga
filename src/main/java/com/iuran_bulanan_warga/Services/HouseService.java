@@ -60,10 +60,14 @@ public class HouseService {
 
   public ResponseEntity<?> serviceCreate(HouseRequest houseRequest) {
     try {
-      Optional<Users> owner = userRepository.findById(houseRequest.getOwner());
-      Optional<Cities> city = cityRepository.findById(houseRequest.getCity());
+      Optional<Users> owner = userRepository.findById(Integer.parseInt(houseRequest.getOwner()));
+      Optional<Cities> city = cityRepository.findById(Integer.parseInt(houseRequest.getCity()));
       Houses house = new Houses(
-          houseRequest.getAddress(),
+          houseRequest.getHouseName(),
+          houseRequest.getStreat(),
+          Integer.parseInt(houseRequest.getHouseNumber()),
+          houseRequest.getRt(),
+          houseRequest.getRw(),
           owner.get(),
           city.get());
       houseRepository.save(house);
@@ -76,13 +80,17 @@ public class HouseService {
   public ResponseEntity<?> serviceUpdate(Integer id, HouseRequest houseRequest) {
     try {
       Optional<Houses> house = houseRepository.findById(id);
-      Optional<Users> owner = userRepository.findById(houseRequest.getOwner());
-      Optional<Cities> city = cityRepository.findById(houseRequest.getCity());
+      Optional<Users> owner = userRepository.findById(Integer.parseInt(houseRequest.getOwner()));
+      Optional<Cities> city = cityRepository.findById(Integer.parseInt(houseRequest.getCity()));
       if (!house.isPresent()) {
         throw new NoSuchElementException("House" + id + "doesn't exist!");
       }
       Houses houseData = house.get();
-      houseData.setAddress(houseRequest.getAddress());
+      houseData.setHouseName(houseRequest.getHouseName());
+      houseData.setStreat(houseRequest.getStreat());
+      houseData.setHouseNumber(Integer.parseInt(houseRequest.getHouseNumber()));
+      houseData.setRt(houseRequest.getRt());
+      houseData.setRw(houseRequest.getRw());
       houseData.setOwner(owner.get());
       houseData.setCity(city.get());
       houseRepository.save(houseData);

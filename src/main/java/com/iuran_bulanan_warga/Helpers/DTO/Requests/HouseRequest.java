@@ -6,11 +6,23 @@ import lombok.Data;
 
 @Data
 public class HouseRequest {
+
+  @Size(max = 50)
+  private String houseName;
+
   @NotBlank
-  @Size(max = 255)
-  private String address;
+  private String houseNumber;
 
-  private Integer owner;
+  private String rt;
 
-  private Integer city;
+  private String rw;
+
+  @NotBlank
+  private String streat;
+
+  // number of id owner
+  private String owner;
+
+  // number of city owner
+  private String city;
 }
