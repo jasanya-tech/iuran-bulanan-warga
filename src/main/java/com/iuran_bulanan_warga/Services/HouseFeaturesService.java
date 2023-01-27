@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -88,4 +89,24 @@ public class HouseFeaturesService {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  // Upload picture to local API
+  public ResponseEntity<?> uploadHousesPicture(Integer houseId, MultipartFile picture) {
+    try {
+      String fileName = StringUtils.cleanPath(picture.getOriginalFilename());
+      Optional<Houses> house = houseRepository.findById(houseId);
+      ImageHouses imageHouse = new ImageHouses(
+          house.get(),
+          fileName,
+          picture.getContentType());
+      imageHouse.setTypePicture(TypePicture.path);
+      String fileCode = ImageUtils.saveFile(fileName, picture);
+      imageHouse.setPath("/loadPicture/" + fileCode);
+      imageHouseRepository.save(imageHouse);
+      return ResponseEntity.ok().body(imageHouse);
+    } catch (Exception e) {
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 }
