@@ -29,10 +29,10 @@ public class ImageHouses {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "house", referencedColumnName = "id")
-    // Column rumah
-    private Houses house;
+    // @ManyToOne
+    // @JoinColumn(name = "house", referencedColumnName = "id")
+    // // Column rumah
+    // private Houses house;
 
     @NotBlank
     private String fileName;
@@ -49,8 +49,7 @@ public class ImageHouses {
 
     private String path;
 
-    public ImageHouses(Houses house, String fileName, String mimeType) {
-        this.house = house;
+    public ImageHouses(String fileName, String mimeType) {
         this.fileName = fileName;
         this.mimeType = mimeType;
     }

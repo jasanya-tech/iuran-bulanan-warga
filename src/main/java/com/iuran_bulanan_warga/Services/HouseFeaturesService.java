@@ -2,6 +2,7 @@ package com.iuran_bulanan_warga.Services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -67,8 +68,7 @@ public class HouseFeaturesService {
       List<Houses> houses = new ArrayList<Houses>();
 
       Pageable paging = PageRequest.of(page, size);
-      Page<Houses> pageHouses;
-      pageHouses = houseRepository.findAll(paging);
+      Page<Houses> pageHouses = houseRepository.findAll(paging);
       houses = pageHouses.getContent();
 
       Map<String, Object> res = new HashMap<>();
@@ -87,15 +87,17 @@ public class HouseFeaturesService {
   public ResponseEntity<?> uploadHousesPictureSource(Integer houseId, MultipartFile picture) {
     try {
       byte[] compresImage = ImageUtils.compressImage(picture.getBytes());
-      Optional<Houses> house = houseRepository.findById(houseId);
-      ImageHouses imageHouse = new ImageHouses(
-          house.get(),
-          picture.getOriginalFilename(),
-          picture.getContentType());
+      Houses house = houseRepository.findById(houseId).get();
+      ImageHouses imageHouse = new ImageHouses();
+      imageHouse.setFileName(picture.getOriginalFilename());
+      imageHouse.setMimeType(picture.getContentType());
       imageHouse.setTypePicture(TypePicture.source);
       imageHouse.setSource(compresImage);
+      imageHouse.setPath("/loadPicture/source/" + picture.getOriginalFilename());
       imageHouseRepository.save(imageHouse);
-      return ResponseEntity.ok().body(imageHouse);
+      house.getPictures().add(imageHouse);
+      houseRepository.save(house);
+      return ResponseEntity.ok().body(house.getPictures());
     } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -105,16 +107,17 @@ public class HouseFeaturesService {
   public ResponseEntity<?> uploadHousesPicture(Integer houseId, MultipartFile picture) {
     try {
       String fileName = StringUtils.cleanPath(picture.getOriginalFilename());
-      Optional<Houses> house = houseRepository.findById(houseId);
-      ImageHouses imageHouse = new ImageHouses(
-          house.get(),
-          fileName,
-          picture.getContentType());
+      Houses house = houseRepository.findById(houseId).get();
+      ImageHouses imageHouse = new ImageHouses();
+      imageHouse.setFileName(fileName);
+      imageHouse.setMimeType(picture.getContentType());
       imageHouse.setTypePicture(TypePicture.path);
       String fileCode = ImageUtils.saveFile(fileName, picture);
       imageHouse.setPath("/loadPicture/" + fileCode);
       imageHouseRepository.save(imageHouse);
-      return ResponseEntity.ok().body(imageHouse);
+      house.getPictures().add(imageHouse);
+      houseRepository.save(house);
+      return ResponseEntity.ok().body(house.getPictures());
     } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -158,7 +161,6 @@ public class HouseFeaturesService {
   public ResponseEntity<?> showHousesDues(Integer houseId) {
     try {
       Houses house = houseRepository.findById(houseId).get();
-      Set<ImageHouses> pictures = imageHouseRepository.getPictures(house.getId());
       String address = house.getStreet() != null
           ? house.getStreet() + " NO." + house.getHouseNumber() + " RT " + house.getRt()
               + " / RW " + house.getRw()
@@ -166,7 +168,7 @@ public class HouseFeaturesService {
       String owner = house.getOwner() != null ? house.getOwner().getFullName() : "tidak di ketahui";
       MonthlyDuesDetailResponse monthlyDuesDetailResponse = new MonthlyDuesDetailResponse();
       monthlyDuesDetailResponse.setId(house.getId());
-      monthlyDuesDetailResponse.setPictures(pictures);
+      monthlyDuesDetailResponse.setPictures(house.getPictures());
       monthlyDuesDetailResponse.setHouseName(house.getHouseName());
       monthlyDuesDetailResponse.setOwner(owner);
       monthlyDuesDetailResponse.setAddress(address);

@@ -2,6 +2,7 @@ package com.iuran_bulanan_warga.Controllers;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iuran_bulanan_warga.Helpers.utils.ImageUtils;
+import com.iuran_bulanan_warga.Services.ImageService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Tag(name = "Images Features", description = "Additional features for load image")
 public class ImageController {
+
+    @Autowired
+    ImageService imageService;
 
     @GetMapping("/{fileCode}")
     public ResponseEntity<?> loadPicture(@PathVariable("fileCode") String fileCode) {
@@ -44,6 +49,11 @@ public class ImageController {
                     .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
                     .body(resource);
         }
+    }
+
+    @GetMapping("/source/{fileName}")
+    public ResponseEntity<?> downloadImage(@PathVariable String fileName) {
+        return imageService.downloadImage(fileName);
     }
 
 }

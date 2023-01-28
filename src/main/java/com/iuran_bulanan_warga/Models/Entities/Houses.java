@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -51,6 +52,11 @@ public class Houses implements Serializable {
   @ManyToOne
   @JoinColumn(name = "city")
   private Cities city;
+
+  @OneToMany
+  @JoinColumn(name = "house", referencedColumnName = "id")
+  // Column rumah
+  private Set<ImageHouses> pictures;
 
   @ManyToMany
   @JoinTable(name = "house_users", joinColumns = @JoinColumn(name = "house_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))

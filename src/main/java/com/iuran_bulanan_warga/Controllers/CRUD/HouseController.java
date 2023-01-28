@@ -1,13 +1,11 @@
 package com.iuran_bulanan_warga.Controllers.CRUD;
 
 import com.iuran_bulanan_warga.Helpers.DTO.Requests.HouseRequest;
-import com.iuran_bulanan_warga.Helpers.utils.ImageUtils;
 import com.iuran_bulanan_warga.Services.HouseService;
 
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
