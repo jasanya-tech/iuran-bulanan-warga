@@ -11,7 +11,7 @@ public class HouseRequest {
   private String houseName;
 
   @NotBlank
-  private String streat;
+  private String street;
 
   @NotBlank
   private String houseNumber;

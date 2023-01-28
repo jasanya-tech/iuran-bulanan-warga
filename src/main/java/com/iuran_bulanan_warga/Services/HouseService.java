@@ -64,7 +64,7 @@ public class HouseService {
       Optional<Cities> city = cityRepository.findById(Integer.parseInt(houseRequest.getCity()));
       Houses house = new Houses(
           houseRequest.getHouseName(),
-          houseRequest.getStreat(),
+          houseRequest.getStreet(),
           Integer.parseInt(houseRequest.getHouseNumber()),
           houseRequest.getRt(),
           houseRequest.getRw(),
@@ -87,7 +87,7 @@ public class HouseService {
       }
       Houses houseData = house.get();
       houseData.setHouseName(houseRequest.getHouseName());
-      houseData.setStreat(houseRequest.getStreat());
+      houseData.setStreet(houseRequest.getStreet());
       houseData.setHouseNumber(Integer.parseInt(houseRequest.getHouseNumber()));
       houseData.setRt(houseRequest.getRt());
       houseData.setRw(houseRequest.getRw());

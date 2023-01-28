@@ -52,4 +52,25 @@ public class HouseFeaturesController {
       @RequestParam(value = "picture") MultipartFile picture, @PathVariable("houseId") Integer houseId) {
     return houseFeaturesService.uploadHousesPicture(houseId, picture);
   }
+
+  @GetMapping("/monthlyDues/views/page")
+  @Operation(summary = "Show Houses Mothly Dues", description = "Showing Mothly Dues for Houses")
+  public ResponseEntity<?> showHousesMothlyDues(
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return houseFeaturesService.showHousesMonthlyDues(page, size);
+  }
+
+  @GetMapping("/monthlyDues/detail/{houseId}")
+  @Operation(summary = "Show House Mothly Dues", description = "Showing Mothly Dues for House")
+  public ResponseEntity<?> showHousesMothlyDues(@PathVariable("houseId") Integer houseId) {
+    return houseFeaturesService.showHousesDues(houseId);
+  }
+
+  @PostMapping("/{houseId}/addDues/{duesId}")
+  @Operation(summary = "Add Dues To House", description = "Feature for adding dues to spesific house")
+  public ResponseEntity<?> addDuesToHouse(@PathVariable("houseId") Integer houseId,
+      @PathVariable("duesId") Integer duesId) {
+    return houseFeaturesService.addDuesToHouseService(houseId, duesId);
+  }
 }

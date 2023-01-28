@@ -35,7 +35,7 @@ public class Houses implements Serializable {
   @Size(max = 50)
   private String houseName;
 
-  private String streat;
+  private String street;
 
   private Integer houseNumber;
 
@@ -61,9 +61,9 @@ public class Houses implements Serializable {
   @JoinTable(name = "monthlyDues", joinColumns = @JoinColumn(name = "houseId"), inverseJoinColumns = @JoinColumn(name = "duesTypeId"))
   private Set<DuesType> monthlyDues = new HashSet<>();
 
-  public Houses(String houseName, String streat, Integer houseNumber, String rt, String rw, Users owner, Cities city) {
+  public Houses(String houseName, String street, Integer houseNumber, String rt, String rw, Users owner, Cities city) {
     this.houseName = houseName;
-    this.streat = streat;
+    this.street = street;
     this.houseNumber = houseNumber;
     this.rt = rt;
     this.rw = rw;
