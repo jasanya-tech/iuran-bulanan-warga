@@ -42,9 +42,9 @@ public class TransactionService {
   }
 
   // Get One Transaction by ID
-  public ResponseEntity<?> serviceGetById(Integer transactionId) {
+  public ResponseEntity<?> serviceGetById(Integer id) {
     try {
-      Optional<Transactions> transaction = transactionRepository.findById(transactionId);
+      Optional<Transactions> transaction = transactionRepository.findById(id);
       if (!transaction.isPresent()) {
         throw new NoSuchElementException("Not Found Transaction");
       }
@@ -66,6 +66,37 @@ public class TransactionService {
       );
       transactionRepository.save(transaction);
       return ResponseEntity.ok().body(transaction);
+    }
+    catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+  }
+
+  public ResponseEntity<?> serviceCreateManyByUserId(TransactionRequest transactionRequest, Integer userId) {
+    try {
+      List<Houses> houses = houseRepository.findHousesByUserId(userId);
+
+      // houses.forEach(house -> {
+      //   Transactions transactions = new Transactions(
+      //     house,
+      //     house.getOwner(),
+      //     Integer.parseInt(transactionRequest.getTotalCost()),
+      //     Date.valueOf(transactionRequest.getDate())
+      //   );
+      // });
+
+      List<Transactions> transactions = new ArrayList<>();
+      for (int i = 0; i < houses.size(); i++) {
+        transactions.add(new Transactions(
+          houses<i>,
+          houses<i>.getOwner(),
+          Integer.parseInt(transactionRequest.getTotalCost()),
+          Date.valueOf(transactionRequest.getDate())
+        ));
+      }
+    
+      transactionRepository.saveAll(transactions);
+      return ResponseEntity.ok().body(transactions);
     }
     catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
