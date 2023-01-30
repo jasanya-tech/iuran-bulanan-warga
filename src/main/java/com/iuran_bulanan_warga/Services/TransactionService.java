@@ -77,7 +77,6 @@ public class TransactionService {
     try {
       List<Houses> houses = houseRepository.findHousesByUserId(userId);
       List<Transactions> transactions = new ArrayList<Transactions>();
-
       houses.forEach(house -> {
         Transactions transaction = new Transactions(
           house,
