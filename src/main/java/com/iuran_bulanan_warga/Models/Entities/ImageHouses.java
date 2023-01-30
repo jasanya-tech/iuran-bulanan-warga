@@ -27,11 +27,6 @@ public class ImageHouses {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // @ManyToOne
-    // @JoinColumn(name = "house", referencedColumnName = "id")
-    // // Column rumah
-    // private Houses house;
-
     @NotBlank
     private String fileName;
 
