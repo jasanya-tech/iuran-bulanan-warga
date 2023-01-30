@@ -2,10 +2,13 @@ package com.iuran_bulanan_warga.Services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
+import com.iuran_bulanan_warga.Helpers.DTO.Requests.AddDuesToHouseRequest;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.AddDuesHouseResponse;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.HouseResponse;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.MessageResponse;
@@ -184,12 +187,16 @@ public class HouseFeaturesService {
     }
   }
 
-  public ResponseEntity<?> addDuesToHouseService(Integer houseId, Integer duesId) {
+  public ResponseEntity<?> addDuesToHouseService(Integer houseId, AddDuesToHouseRequest addDuesToHouseRequest) {
     try {
       Houses house = houseRepository.findById(houseId).get();
-      DuesType duesType = duesTypeRepository.findById(duesId).get();
+      Set<DuesType> duestypes = new HashSet<DuesType>();
+      addDuesToHouseRequest.getIdDuesTypes().forEach(duesId -> {
+        DuesType duesType = duesTypeRepository.findById(Integer.parseInt(duesId)).get();
+        duestypes.add(duesType);
+      });
       AddDuesHouseResponse addDuesHouseResponse = new AddDuesHouseResponse();
-      house.getMonthlyDues().add(duesType);
+      house.setMonthlyDues(duestypes);
       houseRepository.save(house);
       addDuesHouseResponse.setDuesTypes(house.getMonthlyDues());
       house.getMonthlyDues().forEach(dues -> {

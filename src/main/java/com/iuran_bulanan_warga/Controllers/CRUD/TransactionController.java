@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("api/transactions")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Tag(name = "Transactions", description = "CRUD")
 
 public class TransactionController {
+
   @Autowired
   TransactionService transactionService;
 
@@ -49,7 +49,6 @@ public class TransactionController {
   public ResponseEntity<?> create(@Valid @RequestBody TransactionRequest transactionRequest) throws IOException {
     return transactionService.serviceCreate(transactionRequest);
   }
-
   @Operation(summary = "Create Many Transaction", description = "Endpoint for creating many transaction by User ID")
   @PostMapping("/{userId}")
   public ResponseEntity<?> create(
@@ -57,13 +56,12 @@ public class TransactionController {
     @PathVariable("userId") Integer userId) {
       return transactionService.serviceCreateManyByUserId(transactionRequest, userId);
   }
-  
   @Operation(summary = "Update Transaction", description = "Endpoint for updating one transaction by ID")
   @PutMapping("/{id}")
   public ResponseEntity<?> update(
-    @PathVariable("id") Integer id,
-    @Valid @RequestBody TransactionRequest transactionRequest) {
-      return transactionService.serviceUpdate(id, transactionRequest);
+      @PathVariable("id") Integer id,
+      @Valid @RequestBody TransactionRequest transactionRequest) {
+    return transactionService.serviceUpdate(id, transactionRequest);
   }
 
   @Operation(summary = "Delete One Transaction", description = "Endpoint for deleting one transaction by ID")
