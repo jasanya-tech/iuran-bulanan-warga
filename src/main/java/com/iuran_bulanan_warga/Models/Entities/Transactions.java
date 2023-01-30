@@ -39,4 +39,11 @@ public class Transactions implements Serializable {
 
   @Temporal(TemporalType.DATE)
   private Date date;
+
+  public Transactions(Houses houseId, Users userId, Integer totalCost, Date date) {
+    this.houseId = houseId;
+    this.userId = userId;
+    this.totalCost = totalCost;
+    this.date = date;
+  }
 }

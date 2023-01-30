@@ -83,7 +83,7 @@ public class HouseService {
       Optional<Users> owner = userRepository.findById(Integer.parseInt(houseRequest.getOwner()));
       Optional<Cities> city = cityRepository.findById(Integer.parseInt(houseRequest.getCity()));
       if (!house.isPresent()) {
-        throw new NoSuchElementException("House" + id + "doesn't exist!");
+        throw new NoSuchElementException("House with ID " + id + " doesn't exist!");
       }
       Houses houseData = house.get();
       houseData.setHouseName(houseRequest.getHouseName());

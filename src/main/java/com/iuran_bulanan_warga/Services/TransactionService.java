@@ -1,9 +1,15 @@
 package com.iuran_bulanan_warga.Services;
 
+import com.iuran_bulanan_warga.Helpers.DTO.Requests.TransactionRequest;
+import com.iuran_bulanan_warga.Helpers.DTO.Responses.MessageResponse;
+import com.iuran_bulanan_warga.Models.Entities.Houses;
 import com.iuran_bulanan_warga.Models.Entities.Transactions;
+import com.iuran_bulanan_warga.Models.Entities.Users;
 import com.iuran_bulanan_warga.Models.Repositories.HouseRepository;
 import com.iuran_bulanan_warga.Models.Repositories.TransactionRepository;
+import com.iuran_bulanan_warga.Models.Repositories.UserRepository;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -19,8 +25,11 @@ public class TransactionService {
   @Autowired
   TransactionRepository transactionRepository;
 
+  @Autowired
+  UserRepository userRepository;
+
   // List All Transactions
-  public ResponseEntity<?> getAll() {
+  public ResponseEntity<?> serviceGetAll() {
     try {
       List<Transactions> transactions = transactionRepository.findAll();
       if (transactions.isEmpty()) {
@@ -33,7 +42,7 @@ public class TransactionService {
   }
 
   // Get One Transaction by ID
-  public ResponseEntity<?> getOne(Integer transactionId) {
+  public ResponseEntity<?> serviceGetById(Integer transactionId) {
     try {
       Optional<Transactions> transaction = transactionRepository.findById(transactionId);
       if (!transaction.isPresent()) {
@@ -45,4 +54,72 @@ public class TransactionService {
     }
   }
 
+  public ResponseEntity<?> serviceCreate(TransactionRequest transactionRequest) {
+    try {
+      Optional<Houses> house = houseRepository.findById(Integer.parseInt(transactionRequest.getHouseId()));
+      Optional<Users> user = userRepository.findById(Integer.parseInt(transactionRequest.getUserId()));
+      Transactions transaction = new Transactions(
+        house.get(),
+        user.get(),
+        Integer.parseInt(transactionRequest.getTotalCost()),
+        Date.valueOf(transactionRequest.getDate())
+      );
+      transactionRepository.save(transaction);
+      return ResponseEntity.ok().body(transaction);
+    }
+    catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+  }
+
+  public ResponseEntity<?> serviceUpdate(Integer id, TransactionRequest transactionRequest) {
+    try {
+      Optional<Transactions> transaction = transactionRepository.findById(id);
+      Optional<Houses> house = houseRepository.findById(Integer.parseInt(transactionRequest.getHouseId()));
+      Optional<Users> user = userRepository.findById(Integer.parseInt(transactionRequest.getUserId()));
+
+      if (!transaction.isPresent()) {
+        throw new NoSuchElementException("Transaction with ID " + id + " doesn't exist!");
+      }
+
+      Transactions transactionData = transaction.get();
+      transactionData.setHouseId(house.get());
+      transactionData.setUserId(user.get());
+      transactionData.setTotalCost(Integer.parseInt(transactionRequest.getTotalCost()));
+      transactionData.setDate(Date.valueOf(transactionRequest.getDate()));
+      transactionRepository.save(transactionData);
+
+      return ResponseEntity.ok().body(transaction);
+    }
+    catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+  }
+
+  public ResponseEntity<?> serviceDeleteById(Integer id) {
+    try {
+      Optional<Transactions> transaction = transactionRepository.findById(id);
+      
+      if (!transaction.isPresent()) {
+        throw new NoSuchElementException("Transaction with ID " + id + " doesn't exist!");
+      }
+
+      transactionRepository.deleteById(id);
+
+      return ResponseEntity.ok().body(new MessageResponse("Transaction with ID " + id + " has been deleted"));
+    }
+    catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+  }
+
+  public ResponseEntity<?> serviceDeleteAll() {
+    try {
+      transactionRepository.deleteAll();
+      return ResponseEntity.ok().body(new MessageResponse("All transactions has been deleted"));
+    }
+    catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+  }
 }
