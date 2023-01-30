@@ -1,7 +1,7 @@
 package com.iuran_bulanan_warga.Models.Entities;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,9 +38,9 @@ public class Transactions implements Serializable {
   private Integer totalCost;
 
   @Temporal(TemporalType.DATE)
-  private Date date;
+  private LocalDate date;
 
-  public Transactions(Houses houseId, Users userId, Integer totalCost, Date date) {
+  public Transactions(Houses houseId, Users userId, Integer totalCost, LocalDate date) {
     this.houseId = houseId;
     this.userId = userId;
     this.totalCost = totalCost;

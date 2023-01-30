@@ -9,6 +9,4 @@ public class TransactionRequest {
   private String userId;
 
   private String totalCost;
-
-  private String date;
 }

@@ -9,7 +9,7 @@ import com.iuran_bulanan_warga.Models.Repositories.HouseRepository;
 import com.iuran_bulanan_warga.Models.Repositories.TransactionRepository;
 import com.iuran_bulanan_warga.Models.Repositories.UserRepository;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -62,10 +62,11 @@ public class TransactionService {
       Optional<Houses> house = houseRepository.findById(Integer.parseInt(transactionRequest.getHouseId()));
       Optional<Users> user = userRepository.findById(Integer.parseInt(transactionRequest.getUserId()));
       Transactions transaction = new Transactions(
-          house.get(),
-          user.get(),
-          Integer.parseInt(transactionRequest.getTotalCost()),
-          Date.valueOf(transactionRequest.getDate()));
+        house.get(),
+        user.get(),
+        Integer.parseInt(transactionRequest.getTotalCost()),
+        LocalDate.now()
+      );
       transactionRepository.save(transaction);
       return ResponseEntity.ok().body(transaction);
     } catch (Exception e) {
@@ -83,7 +84,7 @@ public class TransactionService {
           house,
           house.getOwner(),
           Integer.parseInt(transactionRequest.getTotalCost()),
-          Date.valueOf(transactionRequest.getDate())
+          LocalDate.now()
         );
         transactions.add(transaction);
       });
@@ -108,7 +109,7 @@ public class TransactionService {
       transactionData.setHouseId(house.get());
       transactionData.setUserId(user.get());
       transactionData.setTotalCost(Integer.parseInt(transactionRequest.getTotalCost()));
-      transactionData.setDate(Date.valueOf(transactionRequest.getDate()));
+      transactionData.setDate(LocalDate.now());
       transactionRepository.save(transactionData);
 
       return ResponseEntity.ok().body(transaction);
