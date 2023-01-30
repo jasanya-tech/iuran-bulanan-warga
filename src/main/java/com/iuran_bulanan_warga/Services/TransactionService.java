@@ -10,6 +10,7 @@ import com.iuran_bulanan_warga.Models.Repositories.TransactionRepository;
 import com.iuran_bulanan_warga.Models.Repositories.UserRepository;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -59,15 +60,13 @@ public class TransactionService {
       Optional<Houses> house = houseRepository.findById(Integer.parseInt(transactionRequest.getHouseId()));
       Optional<Users> user = userRepository.findById(Integer.parseInt(transactionRequest.getUserId()));
       Transactions transaction = new Transactions(
-        house.get(),
-        user.get(),
-        Integer.parseInt(transactionRequest.getTotalCost()),
-        Date.valueOf(transactionRequest.getDate())
-      );
+          house.get(),
+          user.get(),
+          Integer.parseInt(transactionRequest.getTotalCost()),
+          Date.valueOf(transactionRequest.getDate()));
       transactionRepository.save(transaction);
       return ResponseEntity.ok().body(transaction);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }
@@ -75,30 +74,19 @@ public class TransactionService {
   public ResponseEntity<?> serviceCreateManyByUserId(TransactionRequest transactionRequest, Integer userId) {
     try {
       List<Houses> houses = houseRepository.findHousesByUserId(userId);
+      List<Transactions> transactions = new ArrayList<Transactions>();
 
-      // houses.forEach(house -> {
-      //   Transactions transactions = new Transactions(
-      //     house,
-      //     house.getOwner(),
-      //     Integer.parseInt(transactionRequest.getTotalCost()),
-      //     Date.valueOf(transactionRequest.getDate())
-      //   );
-      // });
-
-      List<Transactions> transactions = new ArrayList<>();
-      for (int i = 0; i < houses.size(); i++) {
-        transactions.add(new Transactions(
-          houses<i>,
-          houses<i>.getOwner(),
-          Integer.parseInt(transactionRequest.getTotalCost()),
-          Date.valueOf(transactionRequest.getDate())
-        ));
-      }
-    
+      houses.forEach(house -> {
+        Transactions transaction = new Transactions(
+            house,
+            house.getOwner(),
+            Integer.parseInt(transactionRequest.getTotalCost()),
+            Date.valueOf(transactionRequest.getDate()));
+        transactions.add(transaction);
+      });
       transactionRepository.saveAll(transactions);
       return ResponseEntity.ok().body(transactions);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }
@@ -121,8 +109,7 @@ public class TransactionService {
       transactionRepository.save(transactionData);
 
       return ResponseEntity.ok().body(transaction);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }
@@ -130,7 +117,7 @@ public class TransactionService {
   public ResponseEntity<?> serviceDeleteById(Integer id) {
     try {
       Optional<Transactions> transaction = transactionRepository.findById(id);
-      
+
       if (!transaction.isPresent()) {
         throw new NoSuchElementException("Transaction with ID " + id + " doesn't exist!");
       }
@@ -138,8 +125,7 @@ public class TransactionService {
       transactionRepository.deleteById(id);
 
       return ResponseEntity.ok().body(new MessageResponse("Transaction with ID " + id + " has been deleted"));
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }
@@ -148,8 +134,7 @@ public class TransactionService {
     try {
       transactionRepository.deleteAll();
       return ResponseEntity.ok().body(new MessageResponse("All transactions has been deleted"));
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
   }
