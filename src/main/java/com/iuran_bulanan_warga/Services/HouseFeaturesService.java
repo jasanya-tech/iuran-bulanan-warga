@@ -2,11 +2,9 @@ package com.iuran_bulanan_warga.Services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.AddDuesHouseResponse;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.HouseResponse;
@@ -168,7 +166,7 @@ public class HouseFeaturesService {
       String owner = house.getOwner() != null ? house.getOwner().getFullName() : "tidak di ketahui";
       MonthlyDuesDetailResponse monthlyDuesDetailResponse = new MonthlyDuesDetailResponse();
       monthlyDuesDetailResponse.setId(house.getId());
-      monthlyDuesDetailResponse.setPictures(house.getPictures());
+      house.getPictures().forEach(picture -> monthlyDuesDetailResponse.getPictures().add(picture.getPath()));
       monthlyDuesDetailResponse.setHouseName(house.getHouseName());
       monthlyDuesDetailResponse.setOwner(owner);
       monthlyDuesDetailResponse.setAddress(address);
@@ -178,6 +176,7 @@ public class HouseFeaturesService {
           .setProvinceName(
               house.getCity() != null ? house.getCity().getProvince().getProvinceName() : "belum di setting");
       monthlyDuesDetailResponse.setDuesTypes(house.getMonthlyDues());
+      monthlyDuesDetailResponse.setTotalOccupants(house.getOccupants().size());
 
       return ResponseEntity.ok().body(monthlyDuesDetailResponse);
     } catch (Exception e) {
