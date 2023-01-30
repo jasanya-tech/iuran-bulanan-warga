@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface HouseRepository extends JpaRepository<Houses, Integer> {
-  @Query(value = "SELECT * FROM houses h WHERE h.owner = :userId", nativeQuery = true)
+
+  @Query(value = "SELECT h FROM Houses h WHERE h.owner.id = :userId")
   List<Houses> findHousesByUserId(@Param("userId") Integer userId);
 }

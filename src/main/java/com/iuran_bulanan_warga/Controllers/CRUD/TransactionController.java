@@ -49,7 +49,13 @@ public class TransactionController {
   public ResponseEntity<?> create(@Valid @RequestBody TransactionRequest transactionRequest) throws IOException {
     return transactionService.serviceCreate(transactionRequest);
   }
-
+  @Operation(summary = "Create Many Transaction", description = "Endpoint for creating many transaction by User ID")
+  @PostMapping("/{userId}")
+  public ResponseEntity<?> create(
+    @Valid @RequestBody TransactionRequest transactionRequest,
+    @PathVariable("userId") Integer userId) {
+      return transactionService.serviceCreateManyByUserId(transactionRequest, userId);
+  }
   @Operation(summary = "Update Transaction", description = "Endpoint for updating one transaction by ID")
   @PutMapping("/{id}")
   public ResponseEntity<?> update(
