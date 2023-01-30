@@ -1,5 +1,6 @@
 package com.iuran_bulanan_warga.Controllers;
 
+import com.iuran_bulanan_warga.Helpers.DTO.Requests.AddDuesToHouseRequest;
 import com.iuran_bulanan_warga.Services.HouseFeaturesService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,10 +69,10 @@ public class HouseFeaturesController {
     return houseFeaturesService.showHousesDues(houseId);
   }
 
-  @PostMapping("/{houseId}/addDues/{duesId}")
+  @PostMapping("/{houseId}/addDues")
   @Operation(summary = "Add Dues To House", description = "Feature for adding dues to spesific house")
   public ResponseEntity<?> addDuesToHouse(@PathVariable("houseId") Integer houseId,
-      @PathVariable("duesId") Integer duesId) {
-    return houseFeaturesService.addDuesToHouseService(houseId, duesId);
+      @RequestBody AddDuesToHouseRequest addDuesToHouseRequest) {
+    return houseFeaturesService.addDuesToHouseService(houseId, addDuesToHouseRequest);
   }
 }

@@ -18,7 +18,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TransactionService {
   @Autowired
   HouseRepository houseRepository;
@@ -75,7 +77,6 @@ public class TransactionService {
     try {
       List<Houses> houses = houseRepository.findHousesByUserId(userId);
       List<Transactions> transactions = new ArrayList<Transactions>();
-
       houses.forEach(house -> {
         Transactions transaction = new Transactions(
             house,
