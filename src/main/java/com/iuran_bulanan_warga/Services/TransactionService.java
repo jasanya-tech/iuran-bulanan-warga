@@ -18,7 +18,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TransactionService {
   @Autowired
   HouseRepository houseRepository;
@@ -78,10 +80,11 @@ public class TransactionService {
 
       houses.forEach(house -> {
         Transactions transaction = new Transactions(
-            house,
-            house.getOwner(),
-            Integer.parseInt(transactionRequest.getTotalCost()),
-            Date.valueOf(transactionRequest.getDate()));
+          house,
+          house.getOwner(),
+          Integer.parseInt(transactionRequest.getTotalCost()),
+          Date.valueOf(transactionRequest.getDate())
+        );
         transactions.add(transaction);
       });
       transactionRepository.saveAll(transactions);
