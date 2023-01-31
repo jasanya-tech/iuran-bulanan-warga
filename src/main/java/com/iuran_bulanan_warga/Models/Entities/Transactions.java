@@ -1,7 +1,9 @@
 package com.iuran_bulanan_warga.Models.Entities;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
+
+import org.springframework.data.annotation.CreatedDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,8 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -29,21 +29,19 @@ public class Transactions implements Serializable {
 
   @ManyToOne
   @JoinColumn(name = "houseId", referencedColumnName = "id")
-  private Houses houseId;
+  private Houses house;
 
   @ManyToOne
   @JoinColumn(name = "userId", referencedColumnName = "id")
   private Users userId;
 
-  private Integer totalCost;
+  private Integer totalCost = 0;
 
-  @Temporal(TemporalType.DATE)
-  private Date date;
+  @CreatedDate
+  private Date date = new Date();
 
-  public Transactions(Houses houseId, Users userId, Integer totalCost, Date date) {
-    this.houseId = houseId;
+  public Transactions(Houses house, Users userId) {
+    this.house = house;
     this.userId = userId;
-    this.totalCost = totalCost;
-    this.date = date;
   }
 }
