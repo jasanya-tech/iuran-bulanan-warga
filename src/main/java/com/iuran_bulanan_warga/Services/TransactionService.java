@@ -1,6 +1,8 @@
 package com.iuran_bulanan_warga.Services;
 
+import com.iuran_bulanan_warga.Controllers.CRUD.TransactionUpdateRequest;
 import com.iuran_bulanan_warga.Helpers.DTO.Requests.TransactionRequest;
+import com.iuran_bulanan_warga.Helpers.DTO.Responses.BillingListUserResponse;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.MessageResponse;
 import com.iuran_bulanan_warga.Models.Entities.Houses;
 import com.iuran_bulanan_warga.Models.Entities.Transactions;
@@ -9,7 +11,6 @@ import com.iuran_bulanan_warga.Models.Repositories.HouseRepository;
 import com.iuran_bulanan_warga.Models.Repositories.TransactionRepository;
 import com.iuran_bulanan_warga.Models.Repositories.UserRepository;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -59,32 +60,24 @@ public class TransactionService {
 
   public ResponseEntity<?> serviceCreate(TransactionRequest transactionRequest) {
     try {
-      Optional<Houses> house = houseRepository.findById(Integer.parseInt(transactionRequest.getHouseId()));
-      Optional<Users> user = userRepository.findById(Integer.parseInt(transactionRequest.getUserId()));
-      Transactions transaction = new Transactions(
-        house.get(),
-        user.get(),
-        Integer.parseInt(transactionRequest.getTotalCost()),
-        LocalDate.now()
-      );
-      transactionRepository.save(transaction);
-      return ResponseEntity.ok().body(transaction);
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
-    }
-  }
-
-  public ResponseEntity<?> serviceCreateManyByUserId(TransactionRequest transactionRequest, Integer userId) {
-    try {
-      List<Houses> houses = houseRepository.findHousesByUserId(userId);
       List<Transactions> transactions = new ArrayList<Transactions>();
-      houses.forEach(house -> {
+      transactionRequest.getHouseId().forEach(houseId -> {
+        Integer diffMonth;
+        Boolean lastTransaction = transactionRepository
+            .findLastTransactionsByHouseId(Integer.parseInt(houseId));
+        if (lastTransaction) {
+          diffMonth = transactionRepository.findDiffMonth(Integer.parseInt(houseId));
+        } else {
+          diffMonth = houseRepository.findDiffMonth(Integer.parseInt(houseId));
+        }
+
+        Optional<Houses> house = houseRepository.findById(Integer.parseInt(houseId));
         Transactions transaction = new Transactions(
-          house,
-          house.getOwner(),
-          Integer.parseInt(transactionRequest.getTotalCost()),
-          LocalDate.now()
-        );
+            house.get(),
+            house.get().getOwner());
+        house.get().getMonthlyDues().forEach(dues -> {
+          transaction.setTotalCost((transaction.getTotalCost() + Integer.parseInt(dues.getCost()) * diffMonth));
+        });
         transactions.add(transaction);
       });
       transactionRepository.saveAll(transactions);
@@ -94,21 +87,19 @@ public class TransactionService {
     }
   }
 
-  public ResponseEntity<?> serviceUpdate(Integer id, TransactionRequest transactionRequest) {
+  public ResponseEntity<?> serviceUpdate(Integer id, TransactionUpdateRequest transactionUpdateRequest) {
     try {
       Optional<Transactions> transaction = transactionRepository.findById(id);
-      Optional<Houses> house = houseRepository.findById(Integer.parseInt(transactionRequest.getHouseId()));
-      Optional<Users> user = userRepository.findById(Integer.parseInt(transactionRequest.getUserId()));
+      Optional<Houses> house = houseRepository.findById(Integer.parseInt(transactionUpdateRequest.getHouseId()));
+      Optional<Users> user = userRepository.findById(Integer.parseInt(transactionUpdateRequest.getUserId()));
 
       if (!transaction.isPresent()) {
         throw new NoSuchElementException("Transaction with ID " + id + " doesn't exist!");
       }
 
       Transactions transactionData = transaction.get();
-      transactionData.setHouseId(house.get());
+      transactionData.setHouse(house.get());
       transactionData.setUserId(user.get());
-      transactionData.setTotalCost(Integer.parseInt(transactionRequest.getTotalCost()));
-      transactionData.setDate(LocalDate.now());
       transactionRepository.save(transactionData);
 
       return ResponseEntity.ok().body(transaction);
@@ -129,7 +120,7 @@ public class TransactionService {
 
       return ResponseEntity.ok().body(new MessageResponse("Transaction with ID " + id + " has been deleted"));
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+      return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
     }
   }
 
@@ -138,7 +129,51 @@ public class TransactionService {
       transactionRepository.deleteAll();
       return ResponseEntity.ok().body(new MessageResponse("All transactions has been deleted"));
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+      return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
+    }
+  }
+
+  public ResponseEntity<?> billingListUser(Integer userId) {
+    try {
+      List<Houses> houses = houseRepository.findHousesByUserId(userId);
+      if (houses.isEmpty()) {
+        return ResponseEntity.notFound().build();
+      }
+      List<BillingListUserResponse> billingListUserResponses = new ArrayList<>();
+      houses.forEach(house -> {
+        BillingListUserResponse billingListUserResponse = new BillingListUserResponse();
+        Boolean lastTransaction = transactionRepository
+            .findLastTransactionsByHouseId(house.getId());
+        if (lastTransaction) {
+          Integer diffMonth = transactionRepository.findDiffMonth(house.getId());
+          if (diffMonth != null) {
+            billingListUserResponse.setNumBillMonths(diffMonth);
+          }
+        } else {
+          Integer diffMonth = houseRepository.findDiffMonth(house.getId());
+          if (diffMonth != null) {
+            billingListUserResponse.setNumBillMonths(diffMonth);
+          }
+        }
+        String address = house.getStreet() != null
+            ? house.getStreet() + " NO." + house.getHouseNumber() + " RT " + house.getRt()
+                + " / RW " + house.getRw()
+            : "belum di setting";
+        billingListUserResponse.setHouseName(house.getHouseName());
+        billingListUserResponse.setOwnerName(house.getOwner().getFullName());
+        billingListUserResponse.setTotalOccupants(house.getOccupants().size());
+        billingListUserResponse.setAddress(address);
+        house.getMonthlyDues().forEach(dues -> {
+          billingListUserResponse
+              .setTotalCost(billingListUserResponse.getTotalCost() + Integer.parseInt(dues.getCost()));
+        });
+        billingListUserResponse
+            .setTotalCost(billingListUserResponse.getTotalCost() * billingListUserResponse.getNumBillMonths());
+        billingListUserResponses.add(billingListUserResponse);
+      });
+      return ResponseEntity.ok().body(billingListUserResponses);
+    } catch (Exception e) {
+      return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
     }
   }
 }
