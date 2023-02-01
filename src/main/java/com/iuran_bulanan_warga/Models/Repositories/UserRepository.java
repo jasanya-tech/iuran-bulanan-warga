@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.iuran_bulanan_warga.Helpers.DTO.Repository.SearchByNameOutput;
+import java.util.Optional;
 import com.iuran_bulanan_warga.Models.Entities.Users;
 
 public interface UserRepository extends JpaRepository<Users, Integer> {
@@ -18,4 +19,7 @@ public interface UserRepository extends JpaRepository<Users, Integer> {
     // Search users by full name
     @Query(value = "SELECT new com.iuran_bulanan_warga.Helpers.DTO.Repository.SearchByNameOutput(u.id, u.fullName)  FROM Users u WHERE u.fullName LIKE %:keyword%")
     List<SearchByNameOutput> searchByFullName(@Param("keyword") String keyword);
+
+    // Find record by email
+    Optional<Users> findByEmail(String email);
 }
