@@ -1,20 +1,24 @@
 package com.iuran_bulanan_warga.Services;
 
-import com.iuran_bulanan_warga.Controllers.CRUD.TransactionUpdateRequest;
 import com.iuran_bulanan_warga.Helpers.DTO.Requests.TransactionRequest;
+import com.iuran_bulanan_warga.Helpers.DTO.Requests.TransactionUpdateRequest;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.BillingListUserResponse;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.MessageResponse;
+import com.iuran_bulanan_warga.Models.Entities.DetailTransactions;
 import com.iuran_bulanan_warga.Models.Entities.Houses;
 import com.iuran_bulanan_warga.Models.Entities.Transactions;
 import com.iuran_bulanan_warga.Models.Entities.Users;
+import com.iuran_bulanan_warga.Models.Repositories.DetailTransactionsRepository;
 import com.iuran_bulanan_warga.Models.Repositories.HouseRepository;
 import com.iuran_bulanan_warga.Models.Repositories.TransactionRepository;
 import com.iuran_bulanan_warga.Models.Repositories.UserRepository;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +32,9 @@ public class TransactionService {
 
   @Autowired
   TransactionRepository transactionRepository;
+
+  @Autowired
+  DetailTransactionsRepository detailTransactionsRepository;
 
   @Autowired
   UserRepository userRepository;
@@ -70,12 +77,16 @@ public class TransactionService {
         } else {
           diffMonth = houseRepository.findDiffMonth(Integer.parseInt(houseId));
         }
-
         Optional<Houses> house = houseRepository.findById(Integer.parseInt(houseId));
         Transactions transaction = new Transactions(
             house.get(),
             house.get().getOwner());
         house.get().getMonthlyDues().forEach(dues -> {
+          DetailTransactions detailTransaction = new DetailTransactions();
+          detailTransaction.setDuesName(dues.getDuesName());
+          detailTransaction.setCost(dues.getCost());
+          detailTransactionsRepository.save(detailTransaction);
+          transaction.getDetailTransactions().add(detailTransaction);
           transaction.setTotalCost((transaction.getTotalCost() + Integer.parseInt(dues.getCost()) * diffMonth));
         });
         transactions.add(transaction);
@@ -159,6 +170,8 @@ public class TransactionService {
             ? house.getStreet() + " NO." + house.getHouseNumber() + " RT " + house.getRt()
                 + " / RW " + house.getRw()
             : "belum di setting";
+        billingListUserResponse.setHouseId(house.getId());
+        billingListUserResponse.setPictures(house.getPictures());
         billingListUserResponse.setHouseName(house.getHouseName());
         billingListUserResponse.setOwnerName(house.getOwner().getFullName());
         billingListUserResponse.setTotalOccupants(house.getOccupants().size());
