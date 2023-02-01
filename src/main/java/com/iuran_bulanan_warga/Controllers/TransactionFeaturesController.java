@@ -15,13 +15,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("api/transactions")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name = "Houses Features", description = "Additional features for managing the UI of houses data")
+@Tag(name = "Transaction Features", description = "Additional features for managing the UI of tranactions data")
 public class TransactionFeaturesController {
 
     @Autowired
     TransactionService transactionService;
 
-    @GetMapping("/billingListUser/{userId}")
+    @GetMapping("/billingList/Users/{userId}")
     public ResponseEntity<?> billingListUser(@PathVariable("userId") Integer userId) {
         return transactionService.billingListUser(userId);
     }
