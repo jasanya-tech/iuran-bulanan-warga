@@ -1,4 +1,4 @@
-package com.iuran_bulanan_warga.Controllers.CRUD;
+package com.iuran_bulanan_warga.Helpers.DTO.Requests;
 
 import lombok.Data;
 

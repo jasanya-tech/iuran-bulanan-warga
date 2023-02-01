@@ -3,6 +3,7 @@ package com.iuran_bulanan_warga.Controllers.CRUD;
 import java.io.IOException;
 
 import com.iuran_bulanan_warga.Helpers.DTO.Requests.TransactionRequest;
+import com.iuran_bulanan_warga.Helpers.DTO.Requests.TransactionUpdateRequest;
 import com.iuran_bulanan_warga.Services.TransactionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
