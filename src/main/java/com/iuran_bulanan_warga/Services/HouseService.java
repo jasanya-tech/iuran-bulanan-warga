@@ -70,6 +70,7 @@ public class HouseService {
           houseRequest.getRw(),
           owner.get(),
           city.get());
+      house.getOccupants().add(owner.get());
       houseRepository.save(house);
       return ResponseEntity.ok().body(house);
     } catch (Exception e) {

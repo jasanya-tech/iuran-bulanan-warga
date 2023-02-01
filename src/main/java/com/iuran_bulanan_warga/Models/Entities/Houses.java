@@ -1,8 +1,11 @@
 package com.iuran_bulanan_warga.Models.Entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.springframework.data.annotation.CreatedDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,6 +46,9 @@ public class Houses implements Serializable {
   private String rt;
 
   private String rw;
+
+  @CreatedDate
+  private Date created_at = new Date();
 
   @ManyToOne
   @JoinColumn(name = "owner", referencedColumnName = "id")
