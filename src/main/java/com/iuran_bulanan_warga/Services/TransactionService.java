@@ -2,6 +2,7 @@ package com.iuran_bulanan_warga.Services;
 
 import com.iuran_bulanan_warga.Controllers.CRUD.TransactionUpdateRequest;
 import com.iuran_bulanan_warga.Helpers.DTO.Requests.TransactionRequest;
+import com.iuran_bulanan_warga.Helpers.DTO.Responses.BillingListUserResponse;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.MessageResponse;
 import com.iuran_bulanan_warga.Models.Entities.Houses;
 import com.iuran_bulanan_warga.Models.Entities.Transactions;
@@ -119,7 +120,7 @@ public class TransactionService {
 
       return ResponseEntity.ok().body(new MessageResponse("Transaction with ID " + id + " has been deleted"));
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+      return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
     }
   }
 
@@ -128,7 +129,51 @@ public class TransactionService {
       transactionRepository.deleteAll();
       return ResponseEntity.ok().body(new MessageResponse("All transactions has been deleted"));
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+      return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
+    }
+  }
+
+  public ResponseEntity<?> billingListUser(Integer userId) {
+    try {
+      List<Houses> houses = houseRepository.findHousesByUserId(userId);
+      if (houses.isEmpty()) {
+        return ResponseEntity.notFound().build();
+      }
+      List<BillingListUserResponse> billingListUserResponses = new ArrayList<>();
+      houses.forEach(house -> {
+        BillingListUserResponse billingListUserResponse = new BillingListUserResponse();
+        Boolean lastTransaction = transactionRepository
+            .findLastTransactionsByHouseId(house.getId());
+        if (lastTransaction) {
+          Integer diffMonth = transactionRepository.findDiffMonth(house.getId());
+          if (diffMonth != null) {
+            billingListUserResponse.setNumBillMonths(diffMonth);
+          }
+        } else {
+          Integer diffMonth = houseRepository.findDiffMonth(house.getId());
+          if (diffMonth != null) {
+            billingListUserResponse.setNumBillMonths(diffMonth);
+          }
+        }
+        String address = house.getStreet() != null
+            ? house.getStreet() + " NO." + house.getHouseNumber() + " RT " + house.getRt()
+                + " / RW " + house.getRw()
+            : "belum di setting";
+        billingListUserResponse.setHouseName(house.getHouseName());
+        billingListUserResponse.setOwnerName(house.getOwner().getFullName());
+        billingListUserResponse.setTotalOccupants(house.getOccupants().size());
+        billingListUserResponse.setAddress(address);
+        house.getMonthlyDues().forEach(dues -> {
+          billingListUserResponse
+              .setTotalCost(billingListUserResponse.getTotalCost() + Integer.parseInt(dues.getCost()));
+        });
+        billingListUserResponse
+            .setTotalCost(billingListUserResponse.getTotalCost() * billingListUserResponse.getNumBillMonths());
+        billingListUserResponses.add(billingListUserResponse);
+      });
+      return ResponseEntity.ok().body(billingListUserResponses);
+    } catch (Exception e) {
+      return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
     }
   }
 }
