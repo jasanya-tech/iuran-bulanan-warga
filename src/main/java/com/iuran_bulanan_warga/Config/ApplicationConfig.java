@@ -24,13 +24,14 @@ public class ApplicationConfig {
   @Bean
   public UserDetailsService userDetailsService() {
     // return new UserDetailsService() {
-    //   @Override
-    //   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    //     return null;
-    //   }
+    // @Override
+    // public UserDetails loadUserByUsername(String username) throws
+    // UsernameNotFoundException {
+    // return null;
+    // }
     // };
     return username -> userRepository.findByEmail(username)
-      .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
   }
 
   @Bean
@@ -50,5 +51,5 @@ public class ApplicationConfig {
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
-  
+
 }
