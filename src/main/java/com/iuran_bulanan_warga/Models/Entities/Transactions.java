@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 
 import jakarta.persistence.Column;
@@ -44,6 +46,7 @@ public class Transactions implements Serializable {
 
   @OneToMany
   @JoinColumn(name = "transactionId", referencedColumnName = "id")
+  @OnDelete(action = OnDeleteAction.CASCADE)
   private Set<DetailTransactions> detailTransactions = new HashSet<>();
 
   @CreatedDate

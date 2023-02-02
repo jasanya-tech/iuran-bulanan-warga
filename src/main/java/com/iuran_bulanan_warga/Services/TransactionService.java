@@ -181,10 +181,9 @@ public class TransactionService {
         billingListUserResponse.setAddress(address);
         house.getMonthlyDues().forEach(dues -> {
           billingListUserResponse
-              .setTotalCost(billingListUserResponse.getTotalCost() + Integer.parseInt(dues.getCost()));
+              .setTotalCost(billingListUserResponse.getTotalCost()
+                  + Integer.parseInt(dues.getCost()) * billingListUserResponse.getNumBillMonths());
         });
-        billingListUserResponse
-            .setTotalCost(billingListUserResponse.getTotalCost() * billingListUserResponse.getNumBillMonths());
         billingListUserResponses.add(billingListUserResponse);
       });
       return ResponseEntity.ok().body(billingListUserResponses);
