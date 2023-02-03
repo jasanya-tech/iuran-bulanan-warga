@@ -1,22 +1,29 @@
 package com.iuran_bulanan_warga.Services;
 
-import com.iuran_bulanan_warga.Controllers.CRUD.TransactionUpdateRequest;
 import com.iuran_bulanan_warga.Helpers.DTO.Requests.TransactionRequest;
+import com.iuran_bulanan_warga.Helpers.DTO.Requests.TransactionUpdateRequest;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.BillingListUserResponse;
 import com.iuran_bulanan_warga.Helpers.DTO.Responses.MessageResponse;
+import com.iuran_bulanan_warga.Models.Entities.DetailTransactions;
 import com.iuran_bulanan_warga.Models.Entities.Houses;
 import com.iuran_bulanan_warga.Models.Entities.Transactions;
 import com.iuran_bulanan_warga.Models.Entities.Users;
+import com.iuran_bulanan_warga.Models.Repositories.DetailTransactionsRepository;
 import com.iuran_bulanan_warga.Models.Repositories.HouseRepository;
 import com.iuran_bulanan_warga.Models.Repositories.TransactionRepository;
 import com.iuran_bulanan_warga.Models.Repositories.UserRepository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,6 +35,9 @@ public class TransactionService {
 
   @Autowired
   TransactionRepository transactionRepository;
+
+  @Autowired
+  DetailTransactionsRepository detailTransactionsRepository;
 
   @Autowired
   UserRepository userRepository;
@@ -70,12 +80,16 @@ public class TransactionService {
         } else {
           diffMonth = houseRepository.findDiffMonth(Integer.parseInt(houseId));
         }
-
         Optional<Houses> house = houseRepository.findById(Integer.parseInt(houseId));
         Transactions transaction = new Transactions(
             house.get(),
             house.get().getOwner());
         house.get().getMonthlyDues().forEach(dues -> {
+          DetailTransactions detailTransaction = new DetailTransactions();
+          detailTransaction.setDuesName(dues.getDuesName());
+          detailTransaction.setCost(dues.getCost());
+          detailTransactionsRepository.save(detailTransaction);
+          transaction.getDetailTransactions().add(detailTransaction);
           transaction.setTotalCost((transaction.getTotalCost() + Integer.parseInt(dues.getCost()) * diffMonth));
         });
         transactions.add(transaction);
@@ -159,21 +173,42 @@ public class TransactionService {
             ? house.getStreet() + " NO." + house.getHouseNumber() + " RT " + house.getRt()
                 + " / RW " + house.getRw()
             : "belum di setting";
+        billingListUserResponse.setHouseId(house.getId());
+        billingListUserResponse.setPictures(house.getPictures());
         billingListUserResponse.setHouseName(house.getHouseName());
         billingListUserResponse.setOwnerName(house.getOwner().getFullName());
         billingListUserResponse.setTotalOccupants(house.getOccupants().size());
         billingListUserResponse.setAddress(address);
         house.getMonthlyDues().forEach(dues -> {
           billingListUserResponse
-              .setTotalCost(billingListUserResponse.getTotalCost() + Integer.parseInt(dues.getCost()));
+              .setTotalCost(billingListUserResponse.getTotalCost()
+                  + Integer.parseInt(dues.getCost()) * billingListUserResponse.getNumBillMonths());
         });
-        billingListUserResponse
-            .setTotalCost(billingListUserResponse.getTotalCost() * billingListUserResponse.getNumBillMonths());
         billingListUserResponses.add(billingListUserResponse);
       });
       return ResponseEntity.ok().body(billingListUserResponses);
     } catch (Exception e) {
       return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
+    }
+  }
+
+  public ResponseEntity<?> showTransactionsWithPage(int page, int size) {
+    try {
+      List<Transactions> transactions = new ArrayList<Transactions>();
+
+      Pageable paging = PageRequest.of(page, size);
+      Page<Transactions> pageTransactions = transactionRepository.findAll(paging);
+      transactions = pageTransactions.getContent();
+
+      Map<String, Object> res = new HashMap<>();
+      res.put("data", transactions);
+      res.put("size", size);
+      res.put("currentPage", paging.getPageNumber());
+      res.put("totalItems", pageTransactions.getTotalElements());
+      res.put("totalPage", pageTransactions.getTotalPages());
+      return ResponseEntity.ok().body(res);
+    } catch (Exception e) {
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
